@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 
+
+//signupUser function
 const signupUser = async (req, res) => {
     try {
         const { name, email, username, password } = req.body;
@@ -46,4 +48,38 @@ const signupUser = async (req, res) => {
     }
 };
 
-export { signupUser }; 
+//loginUser function
+const loginUser =async(req,res)=>{
+    try{
+        const {username, password}=req.body;
+        const user= await User.findOne({username});
+        const isPasswordCorrect=await bcrypt.compare(password,user?.password || "");
+
+        if(!user || !isPasswordCorrect) return res.status(400).json({message:"email or password is invalid"});
+
+        generateTokenAndSetCookie(user._id, res);
+        res.status(200).json({
+            _id:user._id,
+            name:user.name,
+            email:user.email,
+            username:user.username,
+        })
+
+    }catch(err){
+        res.status(500).json({message:err.message});
+        console.log("error in loginUser :",err.message);
+    }
+}
+
+const logoutUser= (req,res)=>{
+    try {
+        res.cookie("jwt","",{maxAge:1});
+        res.status(200).json({message:"user logout successufully"})
+    } catch (err) {
+        res.status(500).json({message: err.message});
+        console.log("error in logout:", err.message);
+        
+    }
+}
+
+export { signupUser, loginUser, logoutUser }; 
