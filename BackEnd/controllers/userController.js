@@ -1,5 +1,8 @@
-import bcrypt from 'bcryptjs/dist/bcrypt.js';
-import User from '../models/userModel.js';
+
+import bcrypt from "bcryptjs";
+
+import User from "../models/userModel.js";
+import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 
 const signupUser = async (req, res) => {
     try {
@@ -17,22 +20,24 @@ const signupUser = async (req, res) => {
 
         
         const newUser = new User({
+            
             name,
             email,
             username,
             password: hashedPassword
         });
-
+  
         
         await newUser.save();
         
-        
-        return res.status(201).json({
+        if(newUser){
+        generateTokenAndSetCookie(newUser._id,res);
+        res.status(201).json({
             _id: newUser._id,
             name: newUser.name,
             username: newUser.username,
             email: newUser.email
-        });
+        })};
 
     } catch (err) {
        
@@ -41,4 +46,4 @@ const signupUser = async (req, res) => {
     }
 };
 
-export { signupUser };
+export { signupUser }; 
