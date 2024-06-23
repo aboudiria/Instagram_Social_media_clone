@@ -7,7 +7,7 @@ const generateTokenAndSetCookie=(userId,res)=>{
     expiresIn:'30d',
 
  })
- res.cookie("jwt",token,{
+ res.cookie("Jwt",token,{
     httpOnly:true,//this cookie cannot be access by the browser (more secure)
     maxAge:30*24*60*60*1000,//30 days
     sameSite:'strict',//more protected(Cross-Site Request Forgery (CSRF) attacks.)
