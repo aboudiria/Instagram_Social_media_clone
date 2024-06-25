@@ -57,7 +57,7 @@ const loginUser =async(req,res)=>{
 
         if(!user || !isPasswordCorrect) return res.status(400).json({message:"email or password is invalid"});
 
-        generateTokenAndSetCookie(user._id, res);
+        generateTokenAndSetCookie(user._id, res);  
         res.status(200).json({
             _id:user._id,
             name:user.name,
@@ -67,7 +67,7 @@ const loginUser =async(req,res)=>{
 
     }catch(err){
         res.status(500).json({message:err.message});
-        console.log("error in loginUser :",err.message);
+        console.log("error in loginUser :",err.message); 
     }
 }
 
@@ -76,10 +76,10 @@ const logoutUser= (req,res)=>{
         res.cookie("jwt","",{maxAge:1});
         res.status(200).json({message:"user logout successufully"})
     } catch (err) {
-        res.status(500).json({message: err.message});
+        res.status(500).json({message: err.message}); 
         console.log("error in logout:", err.message);
         
-    }
+    } 
 }
 
 const followAndunfollowUser= async(req,res)=>{
